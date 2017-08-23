@@ -4,6 +4,6 @@
 
 ## Development server
 
-运行 ng serve，启动后访问http://127.0.0.1:4200查看.
+运行 ng serve，启动后访问 http://127.0.0.1:4200 查看.
 
 

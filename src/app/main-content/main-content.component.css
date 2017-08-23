@@ -1,0 +1,17 @@
+.showTip {
+	display: block;
+	opacity: 1;
+}
+.hideTip {
+	display: none;
+	-webkit-animation-delay:2s;  /**延迟动画**/
+	animation-delay:2s; 
+}
+.disPlay{
+	-webkit-animation-play-state: running !important;
+	animation-play-state: running !important;
+}
+.disPaused{
+	-webkit-animation-play-state: pause !important;
+	animation-play-state: pause !important;
+}

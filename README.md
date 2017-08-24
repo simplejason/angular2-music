@@ -17,6 +17,8 @@
 
 > 5、歌词
 
+> 6、完善中
+
 ## 快照
 ![image](https://github.com/simplejason/angular2-music/blob/master/src/assets/snapshot/explore.jpg)
 ***

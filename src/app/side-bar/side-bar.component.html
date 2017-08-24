@@ -1,0 +1,50 @@
+<!-- page_list 页面左侧歌单 -->
+<div class="page_list">
+    <div class="list_container" id="listContainer">
+      <div class="list list_recommend">
+        <p class="title"><i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;推荐</p>
+        <div class="btngroups">
+          <p class="btn find"><a routerLink="/explore"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;发现音乐</a></p>
+          <!-- <p class="btn fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;私人FM</p>
+          <p class="btn mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;MV</p>
+          <p class="btn friends"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的朋友</p> -->
+        </div>
+      </div>
+      <div class="list list_me">
+        <p class="title"><i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;我的音乐</p>
+        <div class="btngroups">
+          <p class="btn local"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;本地音乐</p>
+          <!-- <p class="btn download"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载管理</p>
+          <p class="btn cloud"><i class="fa fa-cloud" aria-hidden="true"></i>&nbsp;&nbsp;我的音乐云盘</p>
+          <p class="btn singers"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的歌手</p>
+          <p class="btn me_mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;我的MV</p>
+          <p class="btn me_fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;我的电台</p> -->
+        </div>
+      </div>
+      <div class="list list_collect">
+        <p class="title">收藏的歌单
+          <span class="title_btngroups">
+              <a href="javascript:void(0);" class="btn unfoldlist"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
+            </span>
+        </p>
+        <div class="btngroups" *ngFor="let plist of playListsAll">
+          <p class="btn"><a routerLink="/playlist/{{plist.id}}"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{plist.name}}</a></p>
+        </div>
+      </div>
+    </div>
+    <!-- 全屏小窗歌词 -->
+    <div class="playlist_smallwindow clearfix">
+      <div class="poster" id="btnExpandPlayBox">
+        <img src="{{ myMusicPlayer.musicPic || '/assets/images/temp_pic001.jpg' }}" alt="" id="smallwindow_albumPic" />
+        <div class="poster_hoverback"><i class="fa fa-expand" aria-hidden="true" (click)="expandLyric()"></i></div>
+      </div>
+      <div class="info">
+        <p class="songname" id="smallwindow_songName">-{{ myMusicPlayer.musicSinger || '歌手名称' }}-</p>
+        <p class="singername" id="smallwindow_singerName">-{{myMusicPlayer.musicName || '歌曲名称'}}-</p>
+      </div>
+      <div class="btngroups">
+        <div class="btn collect"><i class="fa fa-heart-o" aria-hidden="true"></i></div>
+        <div class="btn share"><i class="fa fa-share-square-o" aria-hidden="true"></i></div>
+      </div>
+    </div>
+  </div>

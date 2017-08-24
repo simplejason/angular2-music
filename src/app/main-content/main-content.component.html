@@ -4,10 +4,10 @@
     <div class="list list_recommend">
       <p class="title"><i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;推荐</p>
       <div class="btngroups">
-        <p class="btn find"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;发现音乐</p>
+        <p class="btn find" routerLinkActive="active"><a routerLink="/explore"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;发现音乐</a></p>
         <!-- <p class="btn fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;私人FM</p>
-        <p class="btn mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;MV</p>
-        <p class="btn friends"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的朋友</p> -->
+          <p class="btn mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;MV</p>
+          <p class="btn friends"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的朋友</p> -->
       </div>
     </div>
     <div class="list list_me">
@@ -15,20 +15,18 @@
       <div class="btngroups">
         <p class="btn local"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;本地音乐</p>
         <!-- <p class="btn download"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载管理</p>
-        <p class="btn cloud"><i class="fa fa-cloud" aria-hidden="true"></i>&nbsp;&nbsp;我的音乐云盘</p>
-        <p class="btn singers"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的歌手</p>
-        <p class="btn me_mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;我的MV</p>
-        <p class="btn me_fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;我的电台</p> -->
+          <p class="btn cloud"><i class="fa fa-cloud" aria-hidden="true"></i>&nbsp;&nbsp;我的音乐云盘</p>
+          <p class="btn singers"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的歌手</p>
+          <p class="btn me_mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;我的MV</p>
+          <p class="btn me_fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;我的电台</p> -->
       </div>
     </div>
     <div class="list list_collect">
-      <p class="title">收藏的歌单
-        <span class="title_btngroups">
-            <a href="javascript:void(0);" class="btn unfoldlist"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
-          </span>
+      <p class="title">
+        <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;收藏的歌单
       </p>
       <div class="btngroups" *ngFor="let plist of playListsAll">
-        <p class="btn"><a routerLink="/playlist/{{plist.id}}"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{plist.name}}</a></p>
+        <p class="btn" routerLinkActive="active"><a routerLink="/playlist/{{plist.id}}"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{plist.name}}</a></p>
       </div>
     </div>
   </div>
@@ -49,7 +47,8 @@
   </div>
 </div>
 
-
+<!--随机搜索-->
+<app-explore-content [exploreResults]="exploreResults"></app-explore-content>
 <!--歌单内容页-->
 <div class="page_main R_page" id="pageMain" *ngIf="playLists">
   <div class="main_container">
@@ -79,15 +78,16 @@
                 --><span class="btn plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
             <span class="btn playall"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;收藏({{playLists.subscribedCount}})</span>
             <span class="btn playall"><i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;&nbsp;分享({{playLists.shareCount}})</span>
+            <span class="btn playall"><i class="fa fa-comment" aria-hidden="true"></i>&nbsp;&nbsp;评论({{playLists.commentCount}})</span>
             <span class="btn playall"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载全部</span>
           </div>
         </div>
       </div>
       <div class="listtab">
         <div class="tabbtns clearfix">
-          <label class="label_btn active" for="music" class="active">歌单列表</label>
-          <label class="label_btn" for="comment">评论({{playLists.commentCount}})</label>
-          <label class="label_btn" for="follower">收藏者</label>
+          <label class="label_btn" for="music" class="active">歌单列表</label>
+          <!-- <label class="label_btn" for="comment" disabled="disabled">评论({{playLists.commentCount}})</label>
+          <label class="label_btn" for="follower">收藏者</label> -->
           <span class="menu_search">
                 <input type="text" placeholder="搜索歌单音乐" class="search_inp" />
                 <span class="search_btn"><i class="fa fa-search" aria-hidden="true"></i></span>
@@ -108,7 +108,8 @@
               </tr>
             </thead>
             <tbody class="infolist" id="infoList_playlist">
-              <tr *ngFor="let music of playLists.tracks;let i = index;" (dblclick)="playMusic(musicPlayer, music.id, music.ar[0].name, music.name, music.al.name, music.al.picUrl)">
+              <tr *ngFor="let music of playLists.tracks;let i = index;" (dblclick)="playMusic(musicPlayer, music.id, music.ar[0].name, music.name, music.al.name, music.al.picUrl, i)"
+                [class.active]="i==myMusicPlayer.currentIndex">
                 <td class="index">{{i+1}}</td>
                 <td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;
                   <i class="fa fa-download" aria-hidden="true"></i>
@@ -121,64 +122,12 @@
             </tbody>
           </table>
         </div>
-        <!-- comments -->
-        <input type="radio" id="comment" name="tablist" />
-        <div class="tabitem commentlist">
-          <div class="commentbox clearfix">
-            <textarea name="" id="" cols="30" rows="10" maxlength="140"></textarea>
-            <span class="wordslen">140</span>
-            <a href="javascript:void(0);" class="btn emoji"><i class="fa fa-smile-o" aria-hidden="true"></i></a>
-            <a href="javascript:void(0);" class="btn at"><i class="fa fa-at" aria-hidden="true"></i></a>
-            <a href="javascript:void(0);" class="btn comment">评论</a>
-          </div>
-          <div class="commenttable">
-            <div class="comment new">
-              <div class="title">最新评论(0)</div>
-              <div class="content">
-                <p>未获取到评论</p>
-                <p><span class="username"><a href="javascript:void(0);"></a></span><span class="usersay"></span></p>
-                <div class="btngroups clearfix">
-                  <span class="time"></span>
-                  <span class="btn">
-                        <a href="javascript:void(0);" class="btn_report">举报</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>(0)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <a href="javascript:void(0);" class="btn_share">分享</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <a href="javascript:void(0);" class="btn_reply">回复</a>
-                      </span>
-                </div>
-                <div class="userface"><a href="javascript:void(0);"><img src="/assets/images/user_face.png" alt="" /></a></div>
-              </div>
-            </div>
-            <div class="comment prefect">
-              <div class="title">精彩评论(0)</div>
-              <div class="content">
-                <p style="color:#ccc;">-- 暂无评论 --</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- followers -->
-        <input type="radio" id="follower" name="tablist" />
-        <div class="tabitem followerlist">
-          <figure>
-            <a href="javascript:void(0);"><img src="/assets/images/user_face.png" alt="" /></a>
-            <figcaption><a href="javascript:void(0);">-USERNAME-</a></figcaption>
-          </figure>
-          <figure>
-            <a href="javascript:void(0);"><img src="/assets/images/user_face.png" alt="" /></a>
-            <figcaption><a href="javascript:void(0);">-USERNAME-</a></figcaption>
-          </figure>
-          <figure>
-            <a href="javascript:void(0);"><img src="/assets/images/user_face.png" alt="" /></a>
-            <figcaption><a href="javascript:void(0);">-USERNAME-</a></figcaption>
-          </figure>
-        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- 单曲搜索页 -->
-<div class="page_search R_page" id="pageSearch">
+<div class="page_search R_page" id="pageSearch" *ngIf="searchResults">
   <div class="main_container">
     <p *ngIf="!searchResults" style="margin:20px 40px;color:#bbb;">正在搜索 "<span class="input" style="color:#0b75c3;">{{searchWord}}</span>", 共 0 条，本页最多显示 99 条结果</p>
     <div class="listcontainer" *ngIf="searchResults">
@@ -203,7 +152,8 @@
               </tr>
             </thead>
             <tbody class="infolist" id="infoList_search">
-              <tr *ngFor="let music of searchResults;let i = index;" (dblclick)="playMusic(musicPlayer, music.id, music.artists[0].name, music.name, music.album.name, music.artists[0].picUrl)">
+              <tr *ngFor="let music of searchResults;let i = index;" (dblclick)="playMusic(musicPlayer, music.id, music.artists[0].name, music.name, music.album.name, music.artists[0].picUrl, i)"
+                [class.active]="i==myMusicPlayer.currentIndex">
                 <td class="index">{{i+1}}</td>
                 <td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;
                   <i class="fa fa-download" aria-hidden="true"></i>
@@ -221,12 +171,6 @@
   </div>
 </div>
 
-<!-- loading -->
-<div class="g_loadingbox" id="loadingBox" [style.display]="isShowLoading ? 'block' : 'none'">
-  <i class="fa fa-spinner fa-spin fa-fw"></i>
-  <span class="loading_text"><!-- Loading... --></span>
-</div>
-
 <!-- 歌词详情页 -->
 <div class="page_songdetail" id="pageSongDetail" [ngStyle]="lyricStyles">
   <!-- 模糊背景 -->
@@ -237,7 +181,7 @@
     </div>
     <div class="discsection">
       <div class="disc_needle" id="discNeedle" [class.play]="!musicPlayer.paused"><img src="/assets/images/needle.png" alt=""></div>
-      <div  [class.disPlay]="!musicPlayer.paused"  [class.disPaused]="musicPlayer.paused" class="disc_arc" id="bgDisc" style="background-image:url('/assets/images/al8.png');">
+      <div [class.disPlay]="!musicPlayer.paused" [class.disPaused]="musicPlayer.paused" class="disc_arc" id="bgDisc" style="background-image:url('/assets/images/al8.png');">
         <div class="poster"><img src="/assets/images/disc-o.png" alt=""></div>
       </div>
       <div class="disc_btns">
@@ -263,7 +207,7 @@
         <div class="lrcbox" id="lrcBox">
           <!-- <p>暂无歌词</p> -->
           <p *ngFor="let lyric of myMusicPlayer.lyric;" [class.highlight]="lyric.time==myMusicPlayer.currentTime">
-            {{lyric.lyric}}
+            {{lyric.lyric || '无歌词'}}
           </p>
         </div>
       </div>
@@ -273,14 +217,14 @@
 
 <!--播放器-->
 <!-- audio -->
-<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)">您的该版本浏览器不支持AUDIO标签！！！</audio>
+<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)" (ended)="switchMusic(musicPlayer)">您的该版本浏览器不支持AUDIO标签！！！</audio>
 <!-- page_playerbar 页面底部播放控制条 -->
 <div class="page_playerbar clearfix">
   <!-- 播放控制按钮组 -->
   <div class="playerbar_playbtngroup" id="playBtnGroup">
-    <div class="btn prev"><i class="fa fa-step-backward" aria-hidden="true"></i></div>
+    <div class="btn prev" (click)="switchMusic(musicPlayer,'back')"><i class="fa fa-step-backward" aria-hidden="true"></i></div>
     <div class="btn play" (click)="playMusic(musicPlayer)"><i [ngClass]="{'fa-play':musicPlayer.paused,'fa-pause':!musicPlayer.paused}" class="fa" aria-hidden="true"></i></div>
-    <div class="btn next"><i class="fa fa-step-forward" aria-hidden="true"></i></div>
+    <div class="btn next" (click)="switchMusic(musicPlayer,'forward')"><i class="fa fa-step-forward" aria-hidden="true"></i></div>
   </div>
   <!-- 进度条 -->
   <div class="playerbar_timeprogress">
@@ -288,7 +232,7 @@
       <div class="progress_cache" id="progress_cache" [style.width]="myMusicPlayer.progress" (click)="positionChange($event)">
         <!-- 缓冲条 -->
       </div>
-      <div class="progress_curbar" id="progress_bar"  [style.width]="myMusicPlayer.played">
+      <div class="progress_curbar" id="progress_bar" [style.width]="myMusicPlayer.played">
         <div class="curbar_arc" id="progress_arc"></div>
       </div>
       <div class="time start" id="audio_currentTime">{{myMusicPlayer.currentTime*1000 | date: "mm:ss"}}</div>
@@ -315,4 +259,10 @@
   <p class="tip tip_error show"><i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;<span class="tiptext">{{errorInfo}}</span></p>
   <p class="tip tip_info"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;&nbsp;<span class="tiptext">INFO STRING</span></p>
   <p class="tip tip_ok"><i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;&nbsp;<span class="tiptext">OK STRING</span></p>
+</div>
+
+<!-- loading -->
+<div class="g_loadingbox" id="loadingBox" [style.display]="isShowLoading ? 'block' : 'none'">
+  <i class="fa fa-spinner fa-spin fa-fw"></i>
+  <span class="loading_text"><!-- Loading... --></span>
 </div>

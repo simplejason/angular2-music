@@ -47,4 +47,11 @@ export class MusicApiService {
     return this.http.get(`${this.musicApiURL}/lyric`, { search: data })
       .map(response => response.json());
   }
+  // 获取精品歌单
+  fetchHighquality(limit): Observable<any> {
+    let data = new URLSearchParams();
+    data.append('limit', limit);
+    return this.http.get(`${this.musicApiURL}/top/playlist/highquality`, { search: data })
+      .map(response => response.json());
+  }
 }

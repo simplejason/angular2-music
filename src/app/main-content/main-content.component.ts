@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService, Cookie } from 'ng2-cookies';
 import { Route, Router, ActivatedRoute, Params } from '@angular/router';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from '@angular/animations';
 
 import { globalconfig } from "../app.config";
 
@@ -28,6 +21,7 @@ export class MainContentComponent implements OnInit {
   playLists: any;
   searchResults: any;
   searchOptions: any;
+  exploreResults: any;
   menuState: number;
   errorInfo: string;
   searchWord: string;
@@ -35,7 +29,6 @@ export class MainContentComponent implements OnInit {
   listId: string;
   myMusicPlayer: any;
   lyricStyles: any;
-  lyricPlayStyles: any;
   constructor(private _musicapi: MusicApiService, public _globaldata: GlobalDataService, public _cookieService: CookieService, private route: ActivatedRoute, ) {
   }
   ngOnInit() {
@@ -51,17 +44,17 @@ export class MainContentComponent implements OnInit {
       "played": "0%",
       "musicPic": "",
       "mid": "",
-      "lyric": []
+      "lyric": [],
+      "currentIndex": 0,
+      "currentType": "playLists",
+      "lastClickTime": (new Date()).getTime()
     };
     this.lyricStyles = {
       "top": "100%",
       "right": "100%",
       "opacity": "0"
     }
-    this.lyricPlayStyles = {
-      "-webkit-animation-play-state": "running",
-      "animation-play-state": "running"
-    }
+    // 查询tab点击参数
     this.currentSearchOption = "1";
     // 捕获路由状态参数
     this.typeSub = this.route.params.subscribe(params => {
@@ -77,6 +70,7 @@ export class MainContentComponent implements OnInit {
           },
           error => console.log('Error fetching'));
       } else {
+        // 歌单初始化
         this._musicapi.searchAnything(globalconfig.userName, 1, "1002").subscribe(
           items => {
             if (items) {
@@ -101,7 +95,8 @@ export class MainContentComponent implements OnInit {
       }
 
       // 按照路由参数查询结果
-      // search存在表示是搜索结果|id存在是歌单
+      // search存在表示是搜索结果|id存在是歌单|否则是随机
+      // 这里要再修改
       this.searchWord = params['search'] ? params['search'] : "";
       this.listId = params['id'] ? params['id'] : "";
       if (this.searchWord) {
@@ -109,6 +104,9 @@ export class MainContentComponent implements OnInit {
       }
       if (this.listId) {
         this.searchPlayList(this.listId);
+      }
+      if (this.route.snapshot.url.join('/') == "explore") {
+        this.explorePlayList();
       }
     });
 
@@ -118,23 +116,40 @@ export class MainContentComponent implements OnInit {
   reSearch(search, type) {
     this.currentSearchOption = type;
   }
-
+  // 精品歌单
+  explorePlayList(limit = 40) {
+    this.isShowLoading = true;
+    this._musicapi.fetchHighquality(limit).subscribe(
+      items => {
+        if (items) {
+          this.exploreResults = items.playlists;
+          this.isShowLoading = false;
+        }
+      },
+      error => console.log(error));
+  }
+  // 单曲搜索
   searchData(search, limit = 99, type = '1') {
     this.isShowLoading = true;
     this._musicapi.searchAnything(search, limit, type).subscribe(
       items => {
         if (items) {
+          this.myMusicPlayer.currentIndex = 0;
+          this.myMusicPlayer.currentType = "searchResults";
           this.searchResults = items.result.songs;
           this.isShowLoading = false;
         }
       },
       error => console.log(error));
   }
+  // 歌单歌曲搜索
   searchPlayList(id) {
     this.isShowLoading = true;
     this._musicapi.fetchMyplaylist(id).subscribe(
       items => {
         if (items) {
+          this.myMusicPlayer.currentIndex = 0;
+          this.myMusicPlayer.currentType = "playLists";
           this.playLists = items.playlist;
           this.isShowLoading = false;
         }
@@ -145,7 +160,7 @@ export class MainContentComponent implements OnInit {
     this._musicapi.fetcMusicLyric(this.myMusicPlayer.mid).subscribe(
       items => {
         this.myMusicPlayer.lyric.splice(0, this.myMusicPlayer.lyric.length);
-        if (!items.nolyric) {
+        if (items.hasOwnProperty('lrc')) {
           let tmpLyric = items.lrc.lyric.split('\n');
           let tmp = {};
           for (let ly of tmpLyric) {
@@ -164,8 +179,9 @@ export class MainContentComponent implements OnInit {
       error => console.log(error));
   }
   // -----------播放音乐相关-----------------
-  playMusic(audio, mid?: string, musicsinger?: string, musicname?: string, musicalbumname?: string, musicpic?: string) {
+  playMusic(audio, mid?: string, musicsinger?: string, musicname?: string, musicalbumname?: string, musicpic?: string, index?: number) {
     if (mid) {
+      this.myMusicPlayer.currentIndex = index;
       this.errorInfo = "";
       this.isShowLoading = true;
       this._musicapi.fetchMusicUrl(mid).subscribe(
@@ -174,20 +190,21 @@ export class MainContentComponent implements OnInit {
             this.isShowLoading = false;
             if (items.data[0].url == null) {
               this.errorInfo = "版权原因,无法获取歌曲信息."
-              return;
-            }
-            // 歌曲id
-            this.myMusicPlayer.mid = mid;
+            } else {
+              // 歌曲id
+              this.myMusicPlayer.mid = mid;
 
-            if (musicname && musicsinger && musicalbumname) {
-              this.myMusicPlayer.musicName = musicname;
-              this.myMusicPlayer.musicAlbumName = musicalbumname;
-              this.myMusicPlayer.musicSinger = musicsinger;
+              if (musicname && musicsinger && musicalbumname) {
+                this.myMusicPlayer.musicName = musicname;
+                this.myMusicPlayer.musicAlbumName = musicalbumname;
+                this.myMusicPlayer.musicSinger = musicsinger;
+              }
+              audio.src = items.data[0].url;
+              audio.play();
+              // 预加载歌词
+              this.searchLyric();
             }
-            audio.src = items.data[0].url;
-            audio.play();
-            // 预加载歌词
-            this.searchLyric();
+
           }
         },
         error => { console.log(error); });
@@ -210,9 +227,43 @@ export class MainContentComponent implements OnInit {
     this.myMusicPlayer.played = (this.myMusicPlayer.currentTime / this.myMusicPlayer.duration * 100).toFixed(4) + "%";
   }
   progressUpdate(audio) {
-    this.myMusicPlayer.progress = (audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100).toFixed(4) + "%";
+    if (audio.buffered && audio.duration) {
+      this.myMusicPlayer.progress = (audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100).toFixed(4) + "%";
+    }
+    
   }
-
+  switchMusic(audio, forward?: string) {
+    // 快速点击上下一首
+    let nowTimestamp = (new Date()).getTime();
+    if ( (nowTimestamp-this.myMusicPlayer.lastClickTime) < 1500 ) {
+      this.errorInfo = "点击频率过快";
+      return;
+    }
+    // 快速点击会报错,设置点击时间
+    this.myMusicPlayer.lastClickTime = nowTimestamp;
+    if (forward == 'forward') {
+      this.myMusicPlayer.currentIndex += 1;
+    } else {
+      if (this.myMusicPlayer.currentIndex > 0) {
+        this.myMusicPlayer.currentIndex -= 1;
+      } else {
+        this.errorInfo = "已经到最前.";
+        return;
+      }
+    }
+    if (this.myMusicPlayer.currentType == 'playLists') {
+      // 注意格式
+      let tmp = this.playLists.tracks[this.myMusicPlayer.currentIndex];
+      if (this.myMusicPlayer.currentIndex < (this.playLists.tracks.length - 1)) {
+        this.playMusic(audio, tmp.id, tmp.ar[0].name, tmp.name, tmp.al.name, tmp.al.picUrl, this.myMusicPlayer.currentIndex);
+      }
+    } else {
+      let tmp = this.searchResults[this.myMusicPlayer.currentIndex];
+      if (this.myMusicPlayer.currentIndex < (this.searchResults.length - 1)) {
+        this.playMusic(audio, tmp.id, tmp.artists[0].name, tmp.name, tmp.album.name, tmp.album.picUrl, this.myMusicPlayer.currentIndex);
+      }
+    }
+  }
   // 歌词变化
   // 设置歌词显示页样式
   setLyricStyles(reset?: boolean) {
@@ -220,7 +271,7 @@ export class MainContentComponent implements OnInit {
       // 展开歌词
       this.lyricStyles.top = "100%";
       this.lyricStyles.right = "100%";
-      this.lyricStyles.opacity ="0";      
+      this.lyricStyles.opacity = "0";
     } else {
       // 展开歌词
       this.lyricStyles.top = this.lyricStyles.top == "100%" ? "60px" : "100%";
@@ -233,7 +284,7 @@ export class MainContentComponent implements OnInit {
   * 歌词页弹开收起
   * true:收起重置,false每点击一次更换状态
   */
-  expandLyric(reset?:boolean) {
+  expandLyric(reset?: boolean) {
     this.setLyricStyles(reset);
   }
   // 音量

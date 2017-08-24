@@ -15,6 +15,8 @@ import { CookieService } from 'ng2-cookies';
 
 import { routing } from './app.routes';
 import { TestComponent } from './test/test.component';
+import { SideBarComponent } from './side-bar/side-bar.component';
+import { ExploreContentComponent } from './explore-content/explore-content.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { TestComponent } from './test/test.component';
     HeaderComponent,
     FooterComponent,
     MainContentComponent,
-    TestComponent
+    TestComponent,
+    SideBarComponent,
+    ExploreContentComponent
   ],
   imports: [
     BrowserModule,

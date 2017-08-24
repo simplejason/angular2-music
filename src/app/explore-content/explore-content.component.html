@@ -1,0 +1,58 @@
+<div class="page_main R_page" id="pageExplore" *ngIf="exploreResults">
+    <div class="main_container">
+      <div class="listcontainer">
+        <div class="listinfo clearfix">
+          <div class="info_listpic">
+            <img src="{{ exploreResults[0].coverImgUrl || '/assets/images/temp_pic001.jpg'}}" alt="" />
+          </div>
+          <div class="info_detailtext">
+            <div class="playinfo">
+              <span><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;<span>99999</span></span>
+              <span><i class="fa fa-play-circle-o" aria-hidden="true"></i>&nbsp;&nbsp;<span>99999</span></span>
+            </div>
+            <div class="detail_name">
+              <span class="listtag">精品歌单</span>
+              <span class="listname">精选歌单系列</span>
+            </div>
+            <div class="detail_time">
+              <span class="userpic"><a href="javascript:void(0);"><img src="/assets/images/user_face.png" alt="" /></a></span>
+              <span class="username"><a href="javascript:void(0);">Jason</a></span>
+              <span class="createtime">{{ '2017-08-08' | date:'yyyy-MM-dd'}}</span>
+              <span>整理收集</span>
+            </div>
+          </div>
+        </div>
+        <div class="listtab">
+          <div class="tabbtns clearfix">
+          </div>
+          <!-- musiclist -->
+          <input type="radio" name="tablist" checked="" />
+          <div class="tabitem musiclist">
+            <table>
+              <thead>
+                <tr>
+                  <th>&nbsp;&nbsp;</th>
+                  <th>封面</th>
+                  <th>歌单</th>
+                  <th>简介</th>
+                  <th>风格</th>
+                  <th>最近更新</th>
+                </tr>
+              </thead>
+              <tbody class="infolist">
+                <tr *ngFor="let explore of exploreResults;let i = index;" routerLink="/playlist/{{explore.id}}">
+                  <td class="index">{{i+1}}</td>
+                  <td class="cover_img"><img src="{{explore.coverImgUrl}}" >
+                  </td>
+                  <td>{{explore.name}}</td>
+                  <td>{{explore.copywriter}}</td>
+                  <td>{{explore.tags.join('/')}}</td>
+                  <td>{{explore.trackUpdateTime | date:'yyyy-MM-dd H:mm'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

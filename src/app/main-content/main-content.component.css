@@ -15,3 +15,8 @@
 	-webkit-animation-play-state: pause !important;
 	animation-play-state: pause !important;
 }
+.highlight{
+	color:#E0FFFF;
+	/* position: fixed; */
+	bottom: 50%;
+}

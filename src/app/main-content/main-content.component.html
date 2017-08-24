@@ -206,8 +206,8 @@
       <div class="lrccontainer" id="lrcContainer">
         <div class="lrcbox" id="lrcBox">
           <!-- <p>暂无歌词</p> -->
-          <p *ngFor="let lyric of myMusicPlayer.lyric;" [class.highlight]="lyric.time==myMusicPlayer.currentTime">
-            {{lyric.lyric || '无歌词'}}
+          <p *ngFor="let lyric of myMusicPlayer.lyric;" [class.highlight]="lyric.time==myMusicPlayer.lyricTime">
+            {{lyric.lyric}}
           </p>
         </div>
       </div>
@@ -217,7 +217,7 @@
 
 <!--播放器-->
 <!-- audio -->
-<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)" (ended)="switchMusic(musicPlayer)">您的该版本浏览器不支持AUDIO标签！！！</audio>
+<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)" (ended)="switchMusic(musicPlayer)" (onerror)="errorShow(audio)">您的该版本浏览器不支持AUDIO标签！！！</audio>
 <!-- page_playerbar 页面底部播放控制条 -->
 <div class="page_playerbar clearfix">
   <!-- 播放控制按钮组 -->

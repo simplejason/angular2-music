@@ -45,6 +45,7 @@ export class MainContentComponent implements OnInit {
       "musicPic": "",
       "mid": "",
       "lyric": [],
+      "lyricTime": "00:00",
       "currentIndex": 0,
       "currentType": "playLists",
       "lastClickTime": (new Date()).getTime()
@@ -166,7 +167,7 @@ export class MainContentComponent implements OnInit {
           for (let ly of tmpLyric) {
             if (/(\d+:){1,2}\d+\.?\d+/g.test(ly)) {
               tmp = {
-                "time": ly.match(/(\d+:){1,2}\d+\.?\d+/g)[0],
+                "time": ly.match(/(\d+:){1,2}\d+/g)[0],
                 "lyric": ly.replace(/\[(\d+:){1,2}\d+\.?\d+\]/g, "")
               }
             }
@@ -222,6 +223,7 @@ export class MainContentComponent implements OnInit {
   }
   // 时间/加载进度变化
   timeUpdate(audio) {
+    this.myMusicPlayer.lyricTime = this.formatTime(audio.currentTime.toFixed(0)) != this.myMusicPlayer.lyricTime ? this.formatTime(audio.currentTime.toFixed(0)) : this.myMusicPlayer.lyricTime;
     this.myMusicPlayer.currentTime = audio.currentTime;
     this.myMusicPlayer.duration = audio.duration;
     this.myMusicPlayer.played = (this.myMusicPlayer.currentTime / this.myMusicPlayer.duration * 100).toFixed(4) + "%";
@@ -231,6 +233,9 @@ export class MainContentComponent implements OnInit {
       this.myMusicPlayer.progress = (audio.buffered.end(audio.buffered.length - 1) / audio.duration * 100).toFixed(4) + "%";
     }
     
+  }
+  errorShow(errorShow){
+    console.log(123);
   }
   switchMusic(audio, forward?: string) {
     // 快速点击上下一首
@@ -306,7 +311,8 @@ export class MainContentComponent implements OnInit {
     let min = Math.floor(seconds / 60),
       second = seconds % 60,
       hour, newMin, time, resultSec, resultMin;
-
+    resultSec = second;
+    resultMin = min;
     if (min > 60) {
       hour = Math.floor(min / 60);
       newMin = min % 60;

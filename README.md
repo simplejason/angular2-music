@@ -1,3 +1,7 @@
+# 演示地址(仍在施工...)
+
+[在线音乐播放器](http://demo.tangjs.cn/docs/ng2-music/index.html)
+
 # Angular2Music
 
 以 [Angular CLI](https://github.com/angular/angular-cli) version 1.3.1 开发.

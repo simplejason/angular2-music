@@ -234,8 +234,8 @@ export class MainContentComponent implements OnInit {
     }
     
   }
-  errorShow(errorShow){
-    console.log(123);
+  errorShow(audio){
+    // console.log("error playing");
   }
   switchMusic(audio, forward?: string) {
     // 快速点击上下一首
@@ -298,7 +298,7 @@ export class MainContentComponent implements OnInit {
   }
   // 快进
   positionChange(event) {
-    console.log(event.target);
+    // console.log(event.target);
   }
 
   // 格式化时间
@@ -323,4 +323,10 @@ export class MainContentComponent implements OnInit {
 
     return time = hour ? (hour + ':' + newMin + ':' + resultSec) : (resultMin + ':' + resultSec);
   }
+
+  ngOnDestroy(){
+    // 需要取消订阅，稍后更新
+    // console.log('destory');
+    // this.subscription.unsubscribe();
+}
 }

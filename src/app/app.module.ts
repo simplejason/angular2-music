@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JsonpModule } from '@angular/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -28,6 +30,8 @@ import { ExploreContentComponent } from './explore-content/explore-content.compo
   ],
   imports: [
     BrowserModule,
+    JsonpModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpModule,
     FormsModule,

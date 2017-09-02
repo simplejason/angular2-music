@@ -1,0 +1,33 @@
+.suggest {
+    clear: both;
+    top: 59px;
+    width: 240px;
+    font-size: 12px;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-text-size-adjust: none;
+}
+.suggest-content {
+    position: absolute;
+    z-index: 120;
+    min-width: 200px;
+    max-width: 240px;
+    top:50px;
+    box-sizing: border-box;
+    border: 1px solid #bebebe;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 4px 7px #555;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9)
+}
+.suggest-content ul {
+    list-style: none;
+    padding: 7px;
+}
+.suggest-content ul li {
+    padding: 4px;
+    cursor: pointer;
+}
+.suggest-content ul li:hover {
+    color: #1FC9E9;
+}

@@ -6,7 +6,24 @@
     </h1>
   </div>
   <div class="menu_search">
-    <input type="text" placeholder="探索音乐、歌手" autofocus="" id="inpSearch" class="search_inp" [(ngModel)]="search" (keyup.enter)="searchChange()"  />
+    <input type="text" placeholder="探索音乐、歌手" autofocus="" id="inpSearch" class="search_inp" (keyup.enter)="searchChange()" [formControl]="search"
+    />
     <span class="search_btn" id="top_searchBtn"><i class="fa fa-search" aria-hidden="true" (click)="searchChange()"></i></span>
+    <div class="suggest" *ngIf="searchItems.songs.length || searchItems.singers.length">
+      <div class="suggest-content">
+        <ul>
+          <li *ngIf="searchItems.singers.length">------歌手------</li>
+          <li *ngFor="let sItem of searchItems.singers" (click)="searchChange(sItem.name)">
+            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;{{sItem.name}}
+          </li>
+          <li *ngIf="searchItems.songs.length">------歌曲------</li>
+          <li *ngFor="let sItem of searchItems.songs" (click)="searchChange(sItem.name)">
+            <i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{sItem.name}}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
+
+
 </div>

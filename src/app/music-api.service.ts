@@ -9,6 +9,13 @@ export class MusicApiService {
   constructor(private http: Http) {
     this.musicApiURL = 'http://23.106.147.246:3000';
   }
+  // 搜索建议
+  searchMusicSuggest(search: string): Observable<any> {
+    let data = new URLSearchParams();
+    data.append('keywords', search.toString());
+    return this.http.get(`${this.musicApiURL}/search/suggest`, { search: data })
+      .map(response => response.json());
+  }
   // 歌单列表详情
   fetchMyplaylist(id): Observable<any> {
     let data = new URLSearchParams();

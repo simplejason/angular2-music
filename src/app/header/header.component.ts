@@ -35,22 +35,21 @@ export class HeaderComponent implements OnInit {
           this.searchItems.singers = items.result.artists ? items.result.artists : [];
         } else {
           // 恢复初始化
-          this.searchItems = {
-            "songs": [],
-            "singers": []
-          };
+          this.searchItems.songs = [];
+          this.searchItems.singers = [];
         }
       });
   }
 
   ngOnInit() {
+    // 初始化
+    this.searchItems.songs = [];
+    this.searchItems.singers = [];
   }
   searchChange(searchStr: string = "") {
     // 恢复初始化
-    this.searchItems = {
-      "songs": [],
-      "singers": []
-    };
+    this.searchItems.songs = [];
+    this.searchItems.singers = [];
     if (searchStr) {
       this.router.navigate(['/explore/' + searchStr], { relativeTo: this.route });
       return;

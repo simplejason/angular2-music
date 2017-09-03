@@ -13,4 +13,4 @@ const routes: Routes = [
   {path: '**', redirectTo: 'my', pathMatch : 'full'}
 ];
 
-export const routing = RouterModule.forRoot(routes);
+export const routing = RouterModule.forRoot(routes, {useHash: true});

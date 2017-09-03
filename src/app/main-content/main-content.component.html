@@ -217,7 +217,7 @@
 
 <!--播放器-->
 <!-- audio -->
-<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)" (ended)="switchMusic(musicPlayer)" (onerror)="errorShow(audio)">您的该版本浏览器不支持AUDIO标签！！！</audio>
+<audio id="audio" #musicPlayer (timeupdate)="timeUpdate(musicPlayer)" (progress)="progressUpdate(musicPlayer)" (ended)="switchMusic(musicPlayer)" (onerror)="errorShow(musicPlayer)">您的该版本浏览器不支持AUDIO标签！！！</audio>
 <!-- page_playerbar 页面底部播放控制条 -->
 <div class="page_playerbar clearfix">
   <!-- 播放控制按钮组 -->

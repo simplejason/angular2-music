@@ -9,6 +9,7 @@
     <input type="text" placeholder="探索音乐、歌手" autofocus="" id="inpSearch" class="search_inp" (keyup.enter)="searchChange()" [formControl]="search"
     />
     <span class="search_btn" id="top_searchBtn"><i class="fa fa-search" aria-hidden="true" (click)="searchChange()"></i></span>
+
     <div class="suggest" *ngIf="searchItems.songs.length || searchItems.singers.length">
       <div class="suggest-content">
         <ul>
@@ -24,6 +25,5 @@
       </div>
     </div>
   </div>
-
 
 </div>
